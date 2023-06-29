@@ -179,6 +179,7 @@ def ManagerDashboard(request):
             'team': TrainersData,
             'reservedTalents': reservedTalents,
             'deployedTalents': deployedTalents,
+            'current_cohort': current_cohort,
         }
         return render(request, 'main/manager/dashboard.html', context)
     else:
@@ -1111,9 +1112,9 @@ def ManagerDashboard_traineeProfile(request, pk, n):
                 # get trainee
                 trainee = Trainee.objects.get(id=trainee_id)
                 if 'dismiss' in request.POST:
-                    if trainee.cv_document:
-                        if len(trainee.cv_document )  > 0:
-                            trainee.cv_document.delete()
+                    # if trainee.cv_document:
+                    #     if len(trainee.cv_document )  > 0:
+                    #         trainee.cv_document.delete()
                     # Delete Trainee
                     get_user_model().objects.filter(id=trainee.user.id).delete()
                     Application.objects.filter(email=trainee.user.email).delete()

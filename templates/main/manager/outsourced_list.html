@@ -1,0 +1,195 @@
+{% extends "main/dash_main_layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    {% block account_content%}
+
+    <div class="wrapper">
+      {% include 'main/manager/navbar.html' %}
+      <!-- Left side column. contains the logo and sidebar -->
+      {% include 'main/manager/sidebar.html' %}
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <i class="fa fa-group"></i>
+            Outsourced Talents
+          </h1>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{% url 'manager_dashboard' %}"><i class="fa fa-dashboard"></i> Home</a>
+            </li>
+            <li class="active">Outsourced</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box box-info">
+                <div class="box-header">
+                  <h3 class="box-title">All Talents ({{talents.count}})</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <table
+                    id="example1"
+                    class="table table-bordered table-striped"
+                  >
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th colspan="2">TALENT</th>
+                        <th>DEPLOYMENT</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if talents %} {% for talent in talents %}
+                      <tr>
+                        <td>{{ forloop.counter }}.</td>
+                        <td>
+                          {% if talent.profilePicture %}
+                          <img
+                            class="profile-user-img img-responsive img-circle"
+                            src="{{talent.profilePicture.url}}"
+                            width="120px"
+                            alt="{{talent.user.first_name}} image"
+                          />
+                          {% else %}
+                          <img
+                            class="profile-user-img img-responsive img-circle"
+                            src="{% static 'images/anonymous.png' %}"
+                            width="90px"
+                            alt="{{talent.user.first_name}} image"
+                          />
+                          {% endif %}
+                        </td>
+                        <td>
+                          Name: {{talent.user.first_name}} {{talent.user.last_name}}<br />
+                          Gender: {{trainee.user.gender}}<br />
+                          Email: {{talent.user.email}}<br />
+                          Phome: {{talent.phone1}}<br />
+                          Cohort: {{talent.cohort.cohort_name}}<br />
+                          Stack: {{talent.stack.name}}
+                        </td>
+                        <td>
+                          <img
+                            class=""
+                            src="{{talent.companyDeployed.logoFile.url}}"
+                            width="120px"
+                            alt="{{talent.companyDeployed.name}} image"
+                          />
+                          {{talent.companyDeployed.name}}
+                          <br />
+                           Since {{talent.deployedDate}}
+                        </td>
+                        <td>
+                          <div class="pull-right">
+                            <a
+                              href="{% url 'manager_talentProfile' talent.id %}"
+                              class="btn btn-flat btn-info"
+                              ><i class="fa fa-eye"></i> View</a
+                            >
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% else %}
+                      <tr>
+                        <td colspan="7">
+                          <p>There are no data here.</p>
+                        </td>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-lg-12">
+              <p>Click to generate report. <button class="btn btn-sm btn-primary" onclick="printReport()"> <i class="fa fa-save"></i>  Print Report</button></p>
+            </div>
+          </div>
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      {% include 'main/manager/footer.html' %}
+      <script>
+        function printReport() {
+          var additionalContent = '<h2>SOMS Report for Outsourced Talents</h2>' +
+                                  '<p>This is additional content that is not displayed on the page.</p>';
+          var selectedSection = '<div class="card mb-3">'+
+                  '<div class="box-header">'+
+                    '<h3 class="box-title">List of Outsourced Talents</h3>'+
+                  '</div>'+
+                  '<div class="box-body reportContents">'+
+                  '<table class="table table-bordered table-striped">'+
+                    '<thead>'+
+                      '<tr>'+
+                        '<th>No.</th>'+
+                        '<th colspan="2">TALENT</th>'+
+                        '<th>DEPLOYMENT</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>'+
+                      '{% if talents %} {% for talent in talents %}'+
+                      '<tr>'+
+                        '<td>{{ forloop.counter }}.</td>'+
+                        '<td>'+
+                          '{% if talent.profilePicture %}'+
+                          '<img class="profile-user-img img-responsive img-circle" src="{{talent.profilePicture.url}}" width="120px" alt="{{talent.user.first_name}} image" />'+
+                          '{% else %}'+
+                          '<img class="profile-user-img img-responsive img-circle" src="{% static "images/anonymous.png" %}" width="50px" alt="{{talent.user.first_name}} image" />'+
+                          '{% endif %}'+
+                        '</td>'+
+                        '<td>'+
+                          'Name: {{talent.user.first_name}} {{talent.user.last_name}}<br />'+
+                          'Gender: {{talent.user.gender}}<br />'+
+                          'Email: {{talent.user.email}}<br />'+
+                          'Phome: {{talent.phone1}}<br />'+
+                          'Cohort: {{talent.cohort.cohort_name}}<br />'+
+                          'Stack: {{talent.stack.name}}'+
+                        '</td>'+
+                        '<td>'+
+                          '<img class="" src="{{talent.companyDeployed.logoFile.url}}" width="120px" height="60px" alt="{{talent.companyDeployed.name}} image" />'+
+                          '{{talent.companyDeployed.name}}'+
+                          '<br />'+
+                          ' Since {{talent.deployedDate}}'+
+                        '</td>'+
+                      '</tr>'+
+                      '{% endfor %} {% endif %}'+
+                    '</tbody>'+
+                  '</table>'+
+                '</div></div>';
+
+          // Create a new page content by combining the selected sections' content with additional content
+          var printContent = additionalContent + selectedSection;
+
+          var originalContent = document.body.innerHTML;
+          document.body.innerHTML = printContent;
+          window.print();
+          document.body.innerHTML = originalContent;
+        }
+      </script>
+    </div>
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,117 @@
+{% extends "main/dash_main_layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    {% block account_content%}
+
+    <div class="wrapper">
+      {% include 'main/trainee/navbar.html' %}
+      <!-- Left side column. contains the logo and sidebar -->
+      {% include 'main/trainee/sidebar.html' %}
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <i class="fa fa-tasks"></i>
+            Assigments
+          </h1>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{% url 'trainee_dashboard' %}"><i class="fa fa-dashboard"></i> Home</a>
+            </li>
+            <li class="active">Assignments</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="box box-info">
+                <div class="box-header">
+                  <h3 class="box-title">All Assignment ({{assignments_total}})</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  {% if assignments %}
+                  <div class="list-group">
+                    <br/>
+                    {% for assignment in assignments %}
+                    <a
+                      href="{% url 'trainee_assignmentDetails' assignment.id %}"
+                      class="list-group-item list-group-item-action {% if not assignment.status %}list-group-item-primary active{% endif %}"
+                    >
+                      <div class="d-flex w-100 justify-content-between">
+                        <h4 class="mb-1">
+                          Title: {{assignment.title}}
+                        </h4>
+                      </div>
+                      <p class="mb-1"><i class="fa fa-bullhorn"></i> {{assignment.description}}</p>
+                      {% if assignment.documentFiles %}
+                      <span class="text-md"> <i class="fa fa-file"></i> {{assignment.documentFiles}}</span>
+                      {% endif %}
+                      <span class="label {% if assignment.status %} label-default {% endif %}">From: {{assignment.startDate}}</span> - 
+                      <span class="label {% if assignment.status %} label-default {% endif %}">Due date: {{assignment.dueDate}}</span>
+                    </a>
+                    <br/>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              {% if groupData %}
+              <div class="box box-info">
+                {% for group in groupData %}
+                <div class="box-header with-border">
+                  <h3 class="box-title">
+                    {{group.group_name}}
+                  </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <ul class="list-group list-group-flush">
+                    {% for member in group.trainees.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {% if member.profilePicture %}
+                        <img src="{{member.profilePicture}}" width="30px" alt="{{member.user.first_name}}" />
+                        {% else %}
+                        <img src="{% static 'images/anonymous.png' %}" width="30px" alt="{{member.user.first_name}}" />
+                        {% endif %}
+                        <a href="{% url 'trainee_memberProfile' member.id %}" class="product-titles">
+                          {{member.user}}
+                        </a>
+                    </li>
+                    {% endfor%}
+                  </ul>
+                </div>
+                {% endfor %}
+                <!-- /.box-body -->
+              </div>
+              {% endif %}
+            </div>
+
+          </div>
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      {% include 'main/trainee/footer.html' %}
+    </div>
+    {% endblock %}
+  </body>
+</html>

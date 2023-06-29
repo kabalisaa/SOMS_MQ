@@ -1,0 +1,144 @@
+{% extends "main/dash_main_layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    {% block account_content%}
+
+    <div class="wrapper">
+      {% include 'main/manager/navbar.html' %}
+      <!-- Left side column. contains the logo and sidebar -->
+      {% include 'main/manager/sidebar.html' %}
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <i class="fa fa-group"></i>
+            Our Team
+          </h1>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{% url 'manager_dashboard' %}"><i class="fa fa-dashboard"></i> Home</a>
+            </li>
+            <li class="active">Team</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box box-info">
+                <div class="box-header">
+                  <h3 class="box-title">All Trainers ({{team_total}})</h3>
+                  <button
+                    type="button"
+                    class="btn btn-flat btn-primary pull-right"
+                    data-toggle="modal"
+                    data-target="#modal-default"
+                  >
+                    <i class="fa fa-plus"></i>
+                    New Trainer
+                  </button>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <table
+                    id="example1"
+                    class="table table-bordered table-striped"
+                  >
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>IMAGE</th>
+                        <th>FULL NAMES</th>
+                        <th>SSN</th>
+                        <th>CONTACT</th>
+                        <th>STACK</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if team %} {% for trainer in team %}
+                      <tr>
+                        <td>{{ forloop.counter }}.</td>
+                        <td>
+                          <img
+                            class="profile-user-img img-responsive img-circle"
+                            src="{{trainer.profilePicture.url}}"
+                            width="120px"
+                            alt="{{trainer.user.first_name}} image"
+                          />
+                        </td>
+                        <td>
+                          {{trainer.user}}<br />
+                          Gender: {{trainer.user.gender}}
+                        </td>
+                        <td>{{trainer.ssn}}</td>
+                        <td>
+                          Email: {{trainer.user.email}}<br />
+                          Phome: {{trainer.phone1}}, {{trainer.phone2}}<br />
+                        </td>
+                        <td>{{trainer.stack}}</td>
+                        <td>
+                          <div class="pull-right">
+                            <a
+                              href="{% url 'manager_trainerEdit' trainer.id %}"
+                              class="btn btn-flat btn-info"
+                              ><i class="fa fa-eye"></i> View</a
+                            >
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %} {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+            <!-- /.col -->
+          </div>
+
+          <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title">
+                    <i class="fa fa-user-plus"></i> REGISTER NEW TRAINER
+                  </h4>
+                </div>
+                {% include 'main/manager/trainer_model_form.html' %}
+              </div>
+            </div>
+          </div>
+          <!-- /.modal -->
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      {% include 'main/manager/footer.html' %}
+    </div>
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,267 @@
+{% extends "main/dash_main_layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    {% block account_content%}
+
+    <div class="wrapper">
+      {% include 'main/manager/navbar.html' %}
+      <!-- Left side column. contains the logo and sidebar -->
+      {% include 'main/manager/sidebar.html' %}
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <i class="fa fa-dashboard"></i>
+            Dashboard
+            <small>Control panel</small>
+          </h1>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{% url 'manager_dashboard' %}"><i class="fa fa-dashboard"></i> Home</a>
+            </li>
+            <li class="active">Dashboard</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-yellow">
+                <div class="inner">
+                  <h3>{{ applicant_total }}</h3>
+
+                  <p>New Applicants</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-users"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                  More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-green">
+                <div class="inner">
+                  <h3>{{ stacks.count }}</h3>
+
+                  <p>All Stacks</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-sitemap"></i>
+                </div>
+                <a href="{% url 'manager_stacks' %}" class="small-box-footer">
+                  More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-blue">
+                <div class="inner">
+                  <h3>{{ trainer_total }}</h3>
+
+                  <p>All Trainers</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-group"></i>
+                </div>
+                <a href="{% url 'manager_team' %}" class="small-box-footer">
+                  More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-aqua">
+                <div class="inner">
+                  <h3>{{reservedTalents}}</h3>
+
+                  <p>Reserved Talents</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-group"></i>
+                </div>
+                <a href="{% url 'manager_reservedList' %}" class="small-box-footer">
+                  More info <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+            <!-- ./col -->
+          </div>
+          <!-- /.row -->
+          <div class="row">
+
+            <div class="col-md-12">
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">
+                    <i class="fa fa-tasks"></i> About Cohorts
+                  </h3>
+                </div>
+                <div class="box-body no-padding">
+                  <!-- Column Chart -->
+                  <div id="columnChart"></div>
+                  <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                      new ApexCharts(document.querySelector("#columnChart"), {
+                        title: {
+                          text: 'Referer of Cohorts',
+                          left: 'center'
+                        },
+                        series: [
+                        {% for stack, cohort_trainee_count in stack_data.items %}
+                        {
+                          name: '{{ stack.name }}',
+                          data: [
+                          {% for count in cohort_trainee_count %}
+                          {{ count }},
+                          {% endfor %}
+                          ]
+                        },
+                        {% endfor %}
+                        ],
+                        chart: {
+                          type: 'bar',
+                          height: 400
+                        },
+                        plotOptions: {
+                          bar: {
+                            horizontal: false,
+                            columnWidth: '50%',
+                            endingShape: 'rounded'
+                          },
+                        },
+                        dataLabels: {
+                          enabled: false
+                        },
+                        stroke: {
+                          show: true,
+                          width: 2,
+                          colors: ['transparent']
+                        },
+                        xaxis: {
+                          categories: [
+                          {% for cohort in cohorts %}
+                          '{{cohort.cohort_name}}',
+                          {% endfor%}
+                          ],
+                        },
+                        yaxis: {
+                          title: {
+                            text: 'Trainee(s)'
+                          }
+                        },
+                        fill: {
+                          opacity: 2
+                        },
+                        tooltip: {
+                          y: {
+                            formatter: function(val) {
+                              return val + " Trainee(s)"
+                            }
+                          }
+                        }
+                      }).render();
+                    });
+                  </script>
+                  <!-- End Column Chart -->
+                </div>
+              </div>
+              <!--/.box -->
+            </div>
+
+            <div class="col-md-12">
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">
+                    <i class="fa fa-group"></i> About Talents
+                  </h3>
+                </div>
+                <div class="box-body no-padding">
+                  <!-- Donut Chart -->
+                  <div id="donutChart"></div>
+                  <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                      new ApexCharts(document.querySelector("#donutChart"), {
+                        title: {
+                          text: 'Referer of Outsourced',
+                          left: 'center'
+                        },
+                        series: [{{reservedTalents}}, {{deployedTalents}}],
+                        chart: {
+                          height: 400,
+                          type: 'donut',
+                          toolbar: {
+                            show: true
+                          }
+                        },
+                        tooltip: {
+                          y: {
+                            formatter: function(val) {
+                              return val + " Talent(s)"
+                            }
+                          }
+                        },
+                        labels: ['Reserved Talents', 'Deployed Talents',],
+                      }).render();
+                    });
+                  </script>
+                  <!-- End Donut Chart -->
+                </div>
+              </div>
+              <!--/.box -->
+
+            <div class="col-lg-12">
+              <p>Click to generate report. <button class="btn btn-sm btn-primary" onclick="printReport()"> <i class="fa fa-save"></i>  Print Report</button></p>
+            </div>
+          </div>
+
+          <!-- Main row -->
+          <div class="row"></div>
+          <!-- /.row (main row) -->
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      {% include 'main/manager/footer.html' %}
+      <script>
+        function printReport() {
+          var myChart1 = document.getElementById('columnChart').innerHTML;
+          var myChart2 = document.getElementById('donutChart').innerHTML;
+          var additionalContent = '<h2>SOMS Overview</h2>' +
+                                  '<p>This is additional content that is not displayed on the page.</p>';
+          // Create a new page content by combining the selected sections' content with additional content
+          var printContent = additionalContent + myChart1 + myChart2;
+
+          var originalContent = document.body.innerHTML;
+          document.body.innerHTML = printContent;
+          window.print();
+          document.body.innerHTML = originalContent;
+        }
+      </script>
+
+    </div>
+    {% endblock %}
+  </body>
+</html>

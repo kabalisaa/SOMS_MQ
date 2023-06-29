@@ -1,0 +1,194 @@
+{% extends "main/dash_main_layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    {% block account_content%}
+
+    <div class="wrapper">
+      {% include 'main/manager/navbar.html' %}
+      <!-- Left side column. contains the logo and sidebar -->
+      {% include 'main/manager/sidebar.html' %}
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <i class="fa fa-edit"></i>
+            Update Cohort
+          </h1>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{% url 'manager_dashboard' %}"><i class="fa fa-dashboard"></i> Home</a>
+            </li>
+            <li>
+              <a href="{% url 'manager_cohorts' %}">
+                <i class="fa fa-list"></i> Cohorts
+              </a>
+            </li>
+            <li class="active">Edit</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box box-info">
+                <div class="box-header">
+                  <h3 class="box-title"> Cohort Info </h3>
+                  <span class="pull-right">
+                    <form action="" method="post">
+                      {% csrf_token %}
+                      {% if not cohort.status %}
+                      <button
+                        type="submit"
+                        class="btn btn-flat btn-info pull-right"
+                        name="is_completed"
+                      >
+                        <i class="fa fa-check-square-o"></i> Click to Mark as Completed
+                      </button>
+                      {% else %}
+                      <button
+                        type="submit"
+                        class="btn btn-flat btn-info pull-right"
+                        name="ongoing"
+                      >
+                        <i class="fa fa-square-o"></i> Click to Mark as Ongoing
+                      </button>
+                      {% endif %}
+                    </form>
+                  </span>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                      <div class="form-group mb-0">
+                        <label class="col-form-label">Cohort name</label>
+                        <input
+                          type="text"
+                          class="form-control form-control-uppercase"
+                          name="cohort_name"
+                          placeholder="Cohort Name"
+                          value="{{ cohort.cohort_name }}"
+                          required
+                        />
+                      </div>
+                      <div class="form-group mb-0">
+                        <label class="col-form-label">Start Period:</label>
+                        <input
+                          type="date"
+                          class="form-control"
+                          name="starting_date"
+                          value="{{ cohort.starting_date|date:'Y-m-d' }}"
+                          required
+                        />
+                      </div>
+                      <div class="form-group mb-0">
+                        <label class="col-form-label">End Period:</label>
+                        <input
+                          type="date"
+                          class="form-control"
+                          name="ending_date"
+                          value="{{ cohort.ending_date|date:'Y-m-d' }}"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-danger btn-flat"
+                        data-toggle="modal"
+                        data-target="#delete_modal"
+                      >
+                        <i class="fa fa-trash"></i> Delete
+                      </button>
+                      <button
+                        type="submit"
+                        name="submit"
+                        class="btn btn-primary btn-flat float-right"
+                      >
+                        <i class="fa fa-save"></i> Save Changes
+                      </button>
+                      <a
+                        href="{% url 'manager_cohorts' %}"
+                        class="btn btn-default btn-flat pull-left"
+                        ><i class="fa fa-arrow-left"></i> Back</a
+                      >
+                    </div>
+                  </form>
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+            <!-- /.col -->
+          </div>
+
+          <!-- Modal -->
+          <div class="modal fade" id="delete_modal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title">
+                    <i class="fa fa-trash"></i> DELETE COHORT
+                  </h4>
+                </div>
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <p class="text-center h4">
+                      Are you sure want to delete <br />
+                      Cohort: "{{cohort.cohort_name}}" ?
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-flat btn-default pull-left"
+                      data-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="submit"
+                      name="delete"
+                      class="btn btn-flat btn-danger"
+                    >
+                      Yes, Delete
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      {% include 'main/manager/footer.html' %}
+    </div>
+    {% endblock %}
+  </body>
+</html>

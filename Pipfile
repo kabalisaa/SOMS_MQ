@@ -9,6 +9,7 @@ pillow = "*"
 matplotlib = "*"
 pandas = "*"
 mysqlclient = "*"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "*"}
 
 [dev-packages]
 

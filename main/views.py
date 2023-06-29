@@ -149,9 +149,13 @@ def ManagerDashboard(request):
         # getting trainers
         TrainersData = Trainer.objects.filter()
         # getting new applicants
-        current_cohort = Cohort.objects.latest('starting_date')
-        # getting new applicants
-        NewApplicantsData = Application.objects.filter(cohort=current_cohort.id, status=False)
+        if Cohort.objects.filter():  
+          current_cohort = Cohort.objects.filter().latest('starting_date')
+          # getting new applicants
+          NewApplicantsData = Application.objects.filter(cohort=current_cohort.id, status=False)
+        else:
+            current_cohort = Cohort.objects.filter()
+            NewApplicantsData = Application.objects.filter()
 
         StacksData = Stack.objects.all()
         CohortData = Cohort.objects.all()

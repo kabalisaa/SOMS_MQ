@@ -114,7 +114,7 @@ class AssignmentReport(models.Model):
 
 class Feedback(models.Model):
     report = models.OneToOneField(AssignmentReport, verbose_name="Assignment Report", related_name="feedbacks", on_delete=models.CASCADE)
-    grade = models.CharField(verbose_name="Assignment Grade", max_length=100, unique=True)
+    grade = models.CharField(verbose_name="Assignment Grade", max_length=100)
     comment = models.TextField(verbose_name="Comment", blank=True)
     createdDate = models.DateTimeField(auto_now_add=True)
     def __str__(self):

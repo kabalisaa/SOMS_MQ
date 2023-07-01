@@ -80,6 +80,7 @@
               <div class="box box-info">
                 <div class="box-header">
                   <h3 class="box-title">Report Submission</h3>
+                  {% if groupData %}
                   {% if canSubmit %}
                   <button
                     type="button"
@@ -90,6 +91,9 @@
                     <i class="fa fa-paper-plane"></i>
                     Click to submit
                   </button>
+                  {% endif %}
+                  {% else %}
+                  <span class="label label-danger pull-right">No Assigned Group</span>
                   {% endif %}
                 </div>
                 <!-- /.box-header -->

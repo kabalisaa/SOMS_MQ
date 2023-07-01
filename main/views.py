@@ -2047,7 +2047,11 @@ def TraineeDashboard_assignmentList(request):
     if request.user.is_authenticated and request.user.is_trainee==True:
         # getting current assignment
         assignmentData = Assignment.objects.filter(stack=request.user.trainees.stack).order_by('-createdDate')
-        groupData = Group.objects.filter(id=request.user.trainees.group.id)
+        
+        if request.user.trainees.group:
+           groupData = Group.objects.filter(id=request.user.trainees.group.id)
+        else:
+            groupData = None
 
         context = {
             'title': 'Trainee - Assignment',
@@ -2093,9 +2097,12 @@ def TraineeDashboard_assignmentDetails(request, pk):
             # if exists
             selectedAssignment = Assignment.objects.get(stack=request.user.trainees.stack, id=assignment_id)
             # getting group
-            groupData = Group.objects.filter(id=request.user.trainees.group.id)
+            if request.user.trainees.group:
+                groupData = Group.objects.filter(id=request.user.trainees.group.id)
+            else:
+               groupData = None
             # getting assignment reports
-            if AssignmentReport.objects.filter(assignment=selectedAssignment, group=request.user.trainees.group.id).exists():
+            if groupData and AssignmentReport.objects.filter(assignment=selectedAssignment, group=request.user.trainees.group.id).exists():
                 reportData = AssignmentReport.objects.get(assignment=selectedAssignment, group=request.user.trainees.group.id)
             else:
                 reportData=None

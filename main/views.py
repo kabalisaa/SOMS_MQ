@@ -87,8 +87,9 @@ def ApplicationPage(request):
         # getting stacks
         StacksData = Stack.objects.filter()
         # getting application schedule
-        if not Cohort_schedule.objects.get(schedule_name="Application", cohort=current_cohort.id):
+        if not Cohort_schedule.objects.filter(schedule_name="Application", cohort=current_cohort.id):
             applicationSchedule=None
+            application_on=False
         else:
             schedule = Cohort_schedule.objects.get(schedule_name="Application", cohort=current_cohort.id)
             if schedule.start_period < timezone.now() and schedule.end_period > timezone.now():

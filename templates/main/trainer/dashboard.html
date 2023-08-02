@@ -142,7 +142,29 @@
           {% endif %}
 
           <!-- Main row -->
-          <div class="row"></div>
+          <div class="row">
+            <div class="box box-info">
+              <div class="box-header">
+                <h3 class="box-title">Modules</h3>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                {% if modules %}
+                <ul class="list-group">
+                  {% for module in modules %}
+                  <li class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h4 class="text-primary">{{module.name}}</h4>
+                    </div>
+                    <p class="mb-1">{{module.description}}</p>
+                    <span class="text-md"> <i class="fa fa-file"></i> {{module.documentFiles}}</span>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+          </div>
           <!-- /.row (main row) -->
         </section>
         <!-- /.content -->

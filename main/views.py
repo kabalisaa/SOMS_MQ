@@ -1289,6 +1289,7 @@ def TrainerDashboard(request):
             'dash_active': 'active', 
             'cohorts': CohortData,
             'current_cohort': currCohort,
+            'modules': ModulesData,
             'module_total': ModulesData.count(),
             'trainee_total': TraineesData.count(),
         }
@@ -1379,12 +1380,14 @@ def TrainerDashboard_traineeList(request, pk):
                 # getting cohort
                 CohortData = Cohort.objects.filter()
                 context = {
+                    
                     'title': 'Trainer - Trainees List',
                     'trainees_active': 'active',
                     'current_cohort': current_cohort,
                     'cohorts': CohortData,
                     'groups': groupData,
                     'trainees': traineesData,
+                    'stack':request.user.trainers.stack,
                     'trainees_total': traineesData.count
                 }
                 return render(request, 'main/trainer/trainees_list.html', context)

@@ -166,6 +166,9 @@
               </div>
               <!-- /.box -->
             </div>
+            <div class="col-lg-12">
+              <p>Click to generate report. <button class="btn btn-sm btn-primary" onclick="printReport()"> <i class="fa fa-save"></i>  Print Report</button></p>
+            </div>
           </div>
         </section>
         <!-- /.content -->
@@ -229,6 +232,62 @@
       <!-- /.content-wrapper -->
 
       {% include 'main/trainer/footer.html' %}
+      <script>
+        function printReport() {
+          var additionalContent = '<h2>SOMS Report for {{current_cohort.cohort_name}}</h2>' +
+                                  '<p> Solvit Africa Rwanda </p>'+
+                                  '<p> Kimihurura Sector </p>'+
+                                  '<p> Kigali - Rwanda </p>'+
+                                  '<p> solvitafrica@gmail.com </p>'+
+                                  '<p> +250736482635 </p>'+
+                                  '<p>This is talents undergoing training with the goal of being outsourced in the future..</p>';
+          
+                                  var selectedSections = '<div class="box-body reportContents">'+
+                  '<table class="table table-bordered table-striped">'+
+                    '<thead>'+
+                      '<tr>'+
+                        '<th>No.</th>'+
+                        '<th>IMAGE</th>'+
+                        '<th>FULL NAMES</th>'+
+                        '<th>STACK</th>'+
+                        '<th>CONTACT</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody>'+
+                      '{% if trainees %} {% for trainee in trainees %}'+
+                      '<tr>'+
+                        '<td>{{ forloop.counter }}.</td>'+
+                        '<td>'+
+                          '{% if trainee.profilePicture %}'+
+                          '<img class="profile-user-img img-responsive img-circle" src="{{trainee.profilePicture.url}}" width="120px" alt="{{trainee.user.first_name}} image" />'+
+                          '{% else %}'+
+                          '<img class="profile-user-img img-responsive img-circle" src="{% static "images/anonymous.png" %}" width="90px" alt="{{trainee.user.first_name}} image" />'+
+                          '{% endif %}'+
+                        '</td>'+
+                        '<td>'+
+                          '{{trainee.user.first_name}} {{trainee.user.last_name}} <br />'+
+                          'Gender:{{trainee.user.gender}}'+
+                        '</td>'+
+                        '<td>{{trainee.stack.name}}</td>'+
+                        '<td>'+
+                          'Email: {{trainee.user.email}}<br />'+
+                          'Phone: {{trainee.phone1}}'+
+                        '</td>'+
+                      '</tr>'+
+                      '{% endfor %} {% endif %}'+
+                    '</tbody>'+
+                  '</table>'+
+                '</div>';
+
+          // Create a new page content by combining the selected sections' content with additional content
+          var printContent = additionalContent + selectedSections;
+
+          var originalContent = document.body.innerHTML;
+          document.body.innerHTML = printContent;
+          window.print();
+          document.body.innerHTML = originalContent;
+        }
+      </script>
     </div>
     {% endblock %}
   </body>
